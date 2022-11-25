@@ -1,0 +1,7 @@
+build/contracts/
+
+.idea/
+
+ERC721-pokemoncollection.iml
+
+/node_modules
