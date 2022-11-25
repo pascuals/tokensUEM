@@ -13,11 +13,14 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 contract PokemonCollection is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, OwnableUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable {
     string private _name;
     string private _symbol;
+    string private _ipfsCid;
     /// @custom:oz-upgrades-unsafe-allow constructor
 
-    constructor(string memory name_, string memory symbol_) {
+    constructor(string memory name_, string memory symbol_, string memory ipfsCid_) {
         _name = name_;
         _symbol = symbol_;
+        _ipfsCid = ipfsCid_;
+
         _disableInitializers();
     }
 
@@ -31,8 +34,12 @@ contract PokemonCollection is Initializable, ERC721Upgradeable, ERC721Enumerable
         __UUPSUpgradeable_init();
     }
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "ipfs://{IPFS CID}/";
+    function _baseURI() internal view override returns (string memory) {
+        return append("ipfs://", _ipfsCid, "/");
+    }
+
+    function append(string memory a, string memory b, string memory c) internal pure returns (string memory) {
+        return string(abi.encodePacked(a, b, c));
     }
 
     function pause() public onlyOwner {
